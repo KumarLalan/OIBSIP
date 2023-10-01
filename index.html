@@ -3,47 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TO-DO</title>
+    <title>Login</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="container">
-        <h3>To Do List</h3>
-        <div class="task-input">
-            <i class="fa-solid fa-pencil"></i>
-            <input type="text" id="data" placeholder="Click to add Task...">
-            <i class="fa-regular fa-floppy-disk" onclick="addtask()"></i>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="loginUsername" placeholder="Username" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <h2 id="registrationTitle">Registration</h2>
+        <form id="registrationForm" class="hidden">
+            <input type="text" id="regUsername" placeholder="Username" required>
+            <input type="password" id="regPassword" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
+
+        <div id="signupOption">
+            <p>Don't have an account? <a href="#" id="signupLink">Sign up</a></p>
         </div>
-        <div class="section">
-            <span id="all" onclick="list()">All</span>
-            <span id="pending" onclick="pendinglist()">Pending</span>
-            <span id="complete" onclick="completdlist()">Completed</span>
+
+        <div id="securedPage" class="hidden">
+            <header>
+                <h1>Secure Web Page</h1>
+            </header>
+            <nav>
+                <ul>
+                    <li><a href="/Task4/home.html">Home</a></li>
+                    <li><a href="/Task4/about.html">About</a></li>
+                    <li><a href="/Task4/contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <main>
+                <section>
+                    <h2>About Us</h2>
+                    <p>Welcome to our secure website. We prioritize your security and privacy.</p>
+                </section>
+                <section>
+                    <h2>Contact Us</h2>
+                    <p>Lalan kumar</p>
+                    <p>If you have any questions or concerns, please <a href="lalankumarkrishna@outlook.com">email us</a>.</p>
+                </section>
+            </main>
+            <footer>
+                <p>&copy; 2023 Secure Web Page</p>
+            </footer>
+            <button id="logoutButton" class="login-button">Logout</button>
+            <button id="deleteAccountButton" class="back-button">Delete Account</button>
         </div>
-        <ul class="task-area" id="list">
-             <!-- <li class="task">
-                <label > 
-                    <input type="checkbox" id="1">
-                    <p>name</p>
-                </label>
-                <div class="edit">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                    <i class="fa-solid fa-trash"></i>
-                </div>
-            </li>
-            <li class="task">
-                <label > 
-                    <p>name</p>
-                </label>
-                <div class="edit">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                    <i class="fa-solid fa-trash"></i>
-                </div> -->
-            </li> 
-        </ul>
-        <button class="clear" onclick="clearall()">Clear All</button>
-        <p id="mess"></p>
+
+        <p id="errorMessage" class="hidden"></p>
     </div>
+
+    <script src="script.js"></script>
 </body>
-<script src="script.js"></script>
 </html>

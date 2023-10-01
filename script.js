@@ -1,216 +1,110 @@
-const message = document.getElementById("mess");
+document.addEventListener("DOMContentLoaded", function () {
+    let loggedInUser = null;
 
-var listArr=[];
-var lastdata = localStorage.getItem("todo");
+    const loginForm = document.getElementById('loginForm');
+    const registrationForm = document.getElementById('registrationForm');
+    const securedPage = document.getElementById('securedPage');
+    const logoutButton = document.getElementById('logoutButton');
+    const deleteAccountButton = document.getElementById('deleteAccountButton');
+    const errorMessage = document.getElementById('errorMessage');
+    const registrationTitle = document.getElementById('registrationTitle');
+    const signupLink = document.getElementById('signupLink'); // Added signupLink
 
-if(lastdata!==null){
-    listArr = JSON.parse(lastdata);
-    list();
-}
-const input = document.querySelector("#data");
-input.addEventListener("keyup",e=>{
-    if(e.key=="Enter"){
-        addtask();
-    }
-})
-let sts = "pending";
+    loginForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const loginUsername = document.getElementById('loginUsername').value;
+        const loginPassword = document.getElementById('loginPassword').value;
+        const users = getUsersFromLocalStorage();
+        const user = users.find(user => user.username === loginUsername && user.password === loginPassword);
 
-function addtask(){
-    var time = new Date();
-var add = time.getHours()+":"+time.getMinutes()+":"+time.getSeconds()+"  ";
-    var taskName = document.getElementById("data").value.trim();
-    if(taskName==""){
-        alert("Task can not be empty!");
-    }
-    else{
-        var taskobject = {
-            taskId: listArr.length + 1,
-            taskName: add+taskName,
-            Status:sts
-        };
-        listArr.push(taskobject);
-        localStorage.setItem("todo",JSON.stringify(listArr));
-        list();
-    }
-    document.getElementById("data").value= "";
-}
-
-function list(){
-    document.querySelectorAll('.section span').forEach(function(span) {
-        span.classList.remove('active');
-    });
-    document.getElementById('all').classList.add('active');
-
-    message.innerHTML=`Total ${listArr.length} tasks`;
-    document.getElementById("list").innerHTML = "";
-    for(var index=0; index< listArr.length;index++){
-        var li = document.createElement("li");
-        li.classList.add("task");
-        var label = document.createElement("label");
-        var para = document.createElement("p");
-        para.textContent=listArr[index].taskName;
-        label.appendChild(para);
-        li.appendChild(label);
-        document.getElementById("list").appendChild(li);
-        var div = document.createElement("div");
-        div.classList.add("edit");
-        var check = document.createElement("input");
-        check.type= "checkbox";
-        if(listArr[index].Status=="pending"){
-            check.checked=false;
-        }else{
-            check.checked=true;
+        if (user) {
+            loggedInUser = user;
+            showSecuredPage(loggedInUser.username);
+        } else {
+            showError('Invalid username or password. Please try again.');
         }
-        div.appendChild(check);
-        check.addEventListener("click",upadtestatus);
-        check.taskId = listArr[index].taskId;
-        var edit = document.createElement("i");
-        edit.classList.add("fa-solid");
-        edit.classList.add("fa-pen-to-square");
-        edit.addEventListener("click",edittask);
-        edit.taskId = listArr[index].taskId;
-        var del = document.createElement("i");
-        del.classList.add("fa-solid");
-        del.classList.add("fa-trash");
-        del.addEventListener("click",deletetask);
-        del.taskId = listArr[index].taskId;
-        div.appendChild(edit);
-        div.appendChild(del);
-        document.getElementById("list").appendChild(div);
-    }
-}
-function pendinglist(){
-    document.querySelectorAll('.section span').forEach(function(span) {
-        span.classList.remove('active');
     });
 
-    // Add 'active' class to the clicked span
-    document.getElementById('pending').classList.add('active');
-   let count =0;
-    document.getElementById("list").innerHTML = "";
-    for(var index=0; index< listArr.length;index++){
-        if(listArr[index].Status=="pending"){
-            count++;
-        var li = document.createElement("li");
-        li.classList.add("task");
-        var label = document.createElement("label");
-        var para = document.createElement("p");
-        para.textContent=listArr[index].taskName;
-        label.appendChild(para);
-        li.appendChild(label);
-        document.getElementById("list").appendChild(li);
-        var div = document.createElement("div");
-        div.classList.add("edit");
-        var check = document.createElement("input");
-        check.type= "checkbox";
-        check.checked=false;
-        div.appendChild(check);
-        check.addEventListener("click",upadtestatus);
-        check.taskId = listArr[index].taskId;
-        var edit = document.createElement("i");
-        edit.classList.add("fa-solid");
-        edit.classList.add("fa-pen-to-square");
-        edit.addEventListener("click",edittask);
-        edit.taskId = listArr[index].taskId;
-        var del = document.createElement("i");
-        del.classList.add("fa-solid");
-        del.classList.add("fa-trash");
-        del.addEventListener("click",deletetask);
-        del.taskId = listArr[index].taskId;
-        div.appendChild(edit);
-        div.appendChild(del);
-        document.getElementById("list").appendChild(div);
-    }
-    else{
-        continue;
-    }
-}
-    message.innerHTML=`Total ${count} pending tasks`;
-}
-function completdlist(){
-    document.querySelectorAll('.section span').forEach(function(span) {
-        span.classList.remove('active');
+    registrationForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const regUsername = document.getElementById('regUsername').value;
+        const regPassword = document.getElementById('regPassword').value;
+        const users = getUsersFromLocalStorage();
+
+        if (users.find(user => user.username === regUsername)) {
+            showError('Username is already taken. Please choose a different one.');
+        } else {
+            const newUser = { username: regUsername, password: regPassword };
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPassword').value = '';
+            loggedInUser = newUser;
+            showSecuredPage(loggedInUser.username);
+        }
     });
 
-    // Add 'active' class to the clicked span
-    document.getElementById('complete').classList.add('active');
-    let num =0;
-    document.getElementById("list").innerHTML = "";
-    for(var index=0; index< listArr.length;index++){
-        if(listArr[index].Status=="completed"){
-            num++;
-        var li = document.createElement("li");
-        li.classList.add("task");
-        var label = document.createElement("label");
-        var para = document.createElement("p");
-        para.textContent=listArr[index].taskName;
-        label.appendChild(para);
-        li.appendChild(label);
-        document.getElementById("list").appendChild(li);
-        var div = document.createElement("div");
-        div.classList.add("edit");
-        var check = document.createElement("input");
-        check.classList.add("check");
-        check.type= "checkbox";
-        check.checked=true;
-        check.id=`${index}`;
-        div.appendChild(check);
-        check.addEventListener("click",upadtestatus);
-        check.taskId = listArr[index].taskId;
-        var edit = document.createElement("i");
-        edit.classList.add("fa-solid");
-        edit.classList.add("fa-pen-to-square");
-        edit.addEventListener("click",edittask);
-        edit.taskId = listArr[index].taskId;
-        var del = document.createElement("i");
-        del.classList.add("fa-solid");
-        del.classList.add("fa-trash");
-        del.addEventListener("click",deletetask);
-        del.taskId = listArr[index].taskId;
-        div.appendChild(edit);
-        div.appendChild(del);
-        document.getElementById("list").appendChild(div);
+    signupLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        loginForm.classList.add('hidden');
+        registrationForm.classList.remove('hidden');
+        registrationTitle.style.display = 'block';
+        signupLink.style.display = 'none';
+    });
+
+    logoutButton.addEventListener('click', function () {
+        logout();
+    });
+
+    deleteAccountButton.addEventListener('click', function () {
+        if(confirm("Really want to delete it!")){
+        if (loggedInUser) {
+            const users = getUsersFromLocalStorage();
+            const updatedUsers = users.filter(user => user.username !== loggedInUser.username);
+            localStorage.setItem('users', JSON.stringify(updatedUsers));
+            localStorage.removeItem('loggedInUser');
+            loggedInUser = null;
+            logout();
+        } else {
+            showError('User not logged in.');
+        }
     }
-    else{
-        continue;
+    });
+
+    function getUsersFromLocalStorage() {
+        const usersJSON = localStorage.getItem('users');
+        return usersJSON ? JSON.parse(usersJSON) : [];
     }
-}
-message.innerHTML=`Total ${num}  completed tasks`;
-}
-function upadtestatus(event){
-    var index = listArr.findIndex(a=>a.taskId==event.target.taskId);
-    check = document.getElementById(`${index}`);
-    if(listArr[index].Status=="completed"){
-        listArr[index].Status="pending";
-        console.log(listArr);
-        localStorage.setItem("todo",JSON.stringify(listArr));
+
+    function showSecuredPage(username) {
+        loginForm.classList.add('hidden');
+        registrationForm.classList.add('hidden');
+        securedPage.classList.remove('hidden');
+        securedPage.querySelector('h2').textContent = `Welcome to the Secured Page, ${username}!`;
+        registrationTitle.style.display = 'none';
+        document.querySelector('h2').style.display = 'none';
     }
-    else{
-        listArr[index].Status="completed";
-        console.log(listArr);
-    
-        localStorage.setItem("todo",JSON.stringify(listArr));
+
+    function logout() {
+        loginForm.classList.remove('hidden');
+        registrationForm.classList.add('hidden');
+        securedPage.classList.add('hidden');
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('regUsername').value = '';
+        document.getElementById('regPassword').value = '';
+        errorMessage.textContent = '';
+        registrationTitle.style.display = 'block';
+        document.querySelector('h2').style.display = 'block';
+        signupLink.style.display = 'block'; // Show the "Sign up" link
     }
-    
-}
-function edittask(event){
-    var data = listArr.find(a=>a.taskId==event.target.taskId);
-    document.getElementById("data").value= data.taskName;
-    var index = listArr.findIndex(a=>a.taskId==event.target.taskId);
-    listArr.splice(index,1);
-    localStorage.setItem("todo",JSON.stringify(listArr));
-     list();
-}
-function deletetask(event){
-   var index = listArr.findIndex(a=>a.taskId==event.target.taskId);
-  listArr.splice(index,1);
-  localStorage.setItem("todo",JSON.stringify(listArr));
-  list();
-}
-function clearall(){
-    if(confirm("you want to delete all task!")){
-        listArr.splice(0);
-        localStorage.setItem("todo",JSON.stringify(listArr));
-        list();
-    }   
-}
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.remove('hidden');
+        setTimeout(() => {
+            errorMessage.textContent = '';
+            errorMessage.classList.add('hidden');
+        }, 3000);
+    }
+});
