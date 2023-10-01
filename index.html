@@ -3,19 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ro-HitMan Sharma</title>
+    <title>TO-DO</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="container">
-        <div class="item header">Rohit Sharma "HITMAN" </div>
-        <div class="item image">
-            <div class=" item2 photo"><img src="hitman.png" style="width: 190px;" alt="" srcset=""></div>
-            <div class="item2 intro">“Don’t be afraid of being different, be afraid of being like everyone else.” </div>
+        <h3>To Do List</h3>
+        <div class="task-input">
+            <i class="fa-solid fa-pencil"></i>
+            <input type="text" id="data" placeholder="Click to add Task...">
+            <i class="fa-regular fa-floppy-disk" onclick="addtask()"></i>
         </div>
-        <div class="item about">
-            Rohit Sharma, known as the "Hitman" of Indian cricket, has made a significant impact on the sport. Born in 1987, Sharma joined a local cricket camp in Mumbai and quickly made waves in the Mumbai cricket circuit. He made his One Day International debut in 2007 and holds the record for the highest individual score in ODIs, a staggering 264 runs against Sri Lanka in 2014. Sharma is also a master of the double century, converting centuries into double centuries, making him one of the most formidable limited-overs batsmen in the history of the game. He has captained the Indian cricket team in various formats and is known for his philanthropic efforts, including initiatives to nurture young talent in cricket. Sharma's journey from a young boy to a successful cricketer is an inspiration to millions.
-            </div>
+        <div class="section">
+            <span id="all" onclick="list()">All</span>
+            <span id="pending" onclick="pendinglist()">Pending</span>
+            <span id="complete" onclick="completdlist()">Completed</span>
         </div>
-        </body>
+        <ul class="task-area" id="list">
+             <!-- <li class="task">
+                <label > 
+                    <input type="checkbox" id="1">
+                    <p>name</p>
+                </label>
+                <div class="edit">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <i class="fa-solid fa-trash"></i>
+                </div>
+            </li>
+            <li class="task">
+                <label > 
+                    <p>name</p>
+                </label>
+                <div class="edit">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <i class="fa-solid fa-trash"></i>
+                </div> -->
+            </li> 
+        </ul>
+        <button class="clear" onclick="clearall()">Clear All</button>
+        <p id="mess"></p>
+    </div>
+</body>
+<script src="script.js"></script>
 </html>
